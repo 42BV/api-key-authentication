@@ -2,7 +2,7 @@ package nl._42.apikeyauthentication.autoconfigure;
 
 import java.util.Collection;
 
-import javax.servlet.Filter;
+import jakarta.servlet.Filter;
 
 import org.springframework.security.web.util.matcher.RequestMatcher;
 

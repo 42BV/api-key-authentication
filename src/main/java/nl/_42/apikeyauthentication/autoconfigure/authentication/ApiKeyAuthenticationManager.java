@@ -1,7 +1,6 @@
 package nl._42.apikeyauthentication.autoconfigure.authentication;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,7 +21,7 @@ public class ApiKeyAuthenticationManager implements AuthenticationManager {
             throw new BadCredentialsException("The API key was not found or not the expected value.");
         }
 
-        String key = ((ApiKeyPrincipal) authentication.getPrincipal()).getApiKey();
+        String key = ((ApiKeyPrincipal) authentication.getPrincipal()).apiKey();
         if (!authorizedApiKeys.contains(key)) {
             throw new BadCredentialsException("The API key was not found or not the expected value.");
         }

@@ -17,6 +17,11 @@ A library to easily configure API Key authentication in (parts of) your Spring B
 - Configurable header name
 - Configurable filter placement in the FilterChain
 
+## Requirements
+- Java 17 and Spring Boot 3.0.0+ (use version 1.0.0 of this library if still using Spring Boot 2.x)
+- Spring Security
+- Spring Web
+
 ## Setting up API Key authentication
 
 - You must have the following components in your application:
@@ -30,7 +35,7 @@ A library to easily configure API Key authentication in (parts of) your Spring B
     <dependency>
         <groupId>nl.42</groupId>
         <artifactId>api-key-authentication</artifactId>
-        <version>1.0.0</version>
+        <version>2.0.0</version>
     </dependency>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -43,16 +48,16 @@ A library to easily configure API Key authentication in (parts of) your Spring B
 </dependencies>
 ```
 
-- Create a class annotated by `@Configuration` and extending `WebSecurityConfigurerAdapter` and add it to your app:
+- Create a class annotated by `@Configuration` which defines a `SecurityFilterChain` bean. Add it to your app:
  
 ```java
 @Configuration
 @EnableWebSecurity
-public class ApiKeyConfig extends WebSecurityConfigurerAdapter {
+public class ApiKeyConfig {
 
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     // You can easily configure this library using the Builder...
     // ... or you can create your very own implementation of ApiKeyAuthenticationConfiguration
     ApiKeyAuthenticationConfiguration config = ApiKeyAuthenticationConfigurationBuilder.builder() 
@@ -65,6 +70,8 @@ public class ApiKeyConfig extends WebSecurityConfigurerAdapter {
             .build();
 
     ApiKeyAuthenticationConfigurer.configure(config, http);
+    
+    return http.build();
   }
 }
 ```
@@ -77,16 +84,18 @@ The default header name will be `x-api-key`, but you can override it as followin
  ```java
 @Configuration
 @EnableWebSecurity
-public class ApiKeyConfig extends WebSecurityConfigurerAdapter {
+public class ApiKeyConfig {
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     ApiKeyAuthenticationConfiguration config = ApiKeyAuthenticationConfigurationBuilder.builder()
             .authorizedApiKeys(Set.of(ALLOWED_KEY_1, ALLOWED_KEY_2))
             .headerName("my-awesome-api-key-header-name")
             .build();
 
     ApiKeyAuthenticationConfigurer.configure(config, http);
+    
+    return http.build();
   }
 }
  ```
@@ -97,16 +106,18 @@ By default, all endpoints will be secured. You can either use a String-based ANT
  ```java
 @Configuration
 @EnableWebSecurity
-public class ApiKeyConfig extends WebSecurityConfigurerAdapter {
+public class ApiKeyConfig {
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     ApiKeyAuthenticationConfiguration config = ApiKeyAuthenticationConfigurationBuilder.builder()
             .authorizedApiKeys(Set.of(ALLOWED_KEY_1, ALLOWED_KEY_2))
             .requestMatcher(new OrRequestMatcher(new AntPathRequestMatcher("/public-api/v1/**"), new AntPathRequestMatcher("/public-api/v2/**")))
             .build();
 
     ApiKeyAuthenticationConfigurer.configure(config, http);
+    
+    return http.build();
   }
 }
  ```
@@ -121,10 +132,10 @@ either use the `addFilterBeforeClass` and `addFilterAfterClass` methods of the B
  ```java
 @Configuration
 @EnableWebSecurity
-public class ApiKeyConfig extends WebSecurityConfigurerAdapter {
+public class ApiKeyConfig {
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     ApiKeyAuthenticationConfiguration config = ApiKeyAuthenticationConfigurationBuilder.builder()
             .authorizedApiKeys(Set.of(ALLOWED_KEY_1, ALLOWED_KEY_2))
             .addFilterBeforeClass(BasicAuthenticationFilter.class)
@@ -132,6 +143,8 @@ public class ApiKeyConfig extends WebSecurityConfigurerAdapter {
             .build();
 
     ApiKeyAuthenticationConfigurer.configure(config, http);
+    
+    return http.build();
   }
 }
  ```

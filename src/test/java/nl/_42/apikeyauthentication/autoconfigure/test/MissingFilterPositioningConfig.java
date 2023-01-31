@@ -6,24 +6,25 @@ import nl._42.apikeyauthentication.autoconfigure.ApiKeyAuthenticationConfigurati
 import nl._42.apikeyauthentication.autoconfigure.ApiKeyAuthenticationConfigurationBuilder;
 import nl._42.apikeyauthentication.autoconfigure.ApiKeyAuthenticationConfigurer;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @Profile("api-key-filter-positioning-missing")
 @EnableWebSecurity
-public class MissingFilterPositioningConfig extends WebSecurityConfigurerAdapter {
+public class MissingFilterPositioningConfig {
 
     public static final String ALLOWED_KEY = "filter-position-missing-1234567890";
 
     private static IllegalArgumentException exception;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         exception = null;
         http = http.addFilterBefore(new FooFilter(), BasicAuthenticationFilter.class);
 
@@ -38,6 +39,8 @@ public class MissingFilterPositioningConfig extends WebSecurityConfigurerAdapter
         } catch (IllegalArgumentException e) {
             exception = e;
         }
+
+        return http.build();
     }
 
     public static IllegalArgumentException getException() {

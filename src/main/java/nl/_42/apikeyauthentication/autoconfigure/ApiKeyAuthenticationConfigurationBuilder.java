@@ -4,7 +4,7 @@ package nl._42.apikeyauthentication.autoconfigure;
 import java.util.Collection;
 import java.util.Objects;
 
-import javax.servlet.Filter;
+import jakarta.servlet.Filter;
 
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;

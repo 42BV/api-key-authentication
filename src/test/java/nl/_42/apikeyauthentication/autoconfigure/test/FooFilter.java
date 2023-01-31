@@ -3,11 +3,11 @@ package nl._42.apikeyauthentication.autoconfigure.test;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import nl._42.apikeyauthentication.autoconfigure.authentication.ApiKeyPrincipal;
 
@@ -27,7 +27,7 @@ public class FooFilter implements Filter {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth instanceof PreAuthenticatedAuthenticationToken) {
-            apiKey = ((ApiKeyPrincipal)auth.getPrincipal()).getApiKey();
+            apiKey = ((ApiKeyPrincipal)auth.getPrincipal()).apiKey();
         }
         httpServletResponse.getOutputStream().write(("I AM A TEAPOT AND AM USING KEY " + apiKey + " :D").getBytes(StandardCharsets.UTF_8));
     }
