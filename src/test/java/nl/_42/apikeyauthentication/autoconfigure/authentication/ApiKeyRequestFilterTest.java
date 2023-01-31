@@ -49,7 +49,7 @@ class ApiKeyRequestFilterTest {
 
             assertTrue(principal instanceof ApiKeyPrincipal);
 
-            assertEquals(apiKey, ((ApiKeyPrincipal)principal).getApiKey());
+            assertEquals(apiKey, ((ApiKeyPrincipal)principal).apiKey());
         }
     }
 

@@ -1,14 +1,5 @@
 package nl._42.apikeyauthentication.autoconfigure.authentication;
 
-public class ApiKeyPrincipal {
+public record ApiKeyPrincipal(String apiKey) {
 
-    private final String apiKey;
-
-    public ApiKeyPrincipal(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public String getApiKey() {
-        return apiKey;
-    }
 }

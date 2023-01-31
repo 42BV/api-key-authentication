@@ -22,7 +22,7 @@ public class ApiKeyAuthenticationConfigurer {
          * We don't need to create sessions, all the requests must provide
          * a valid API Key, so we recheck each time
          */
-        SessionManagementConfigurer<HttpSecurity> configurer = http.requestMatcher(configuration.getRequestMatcher())
+        SessionManagementConfigurer<HttpSecurity> configurer = http.securityMatcher(configuration.getRequestMatcher())
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -49,7 +49,7 @@ public class ApiKeyAuthenticationConfigurer {
          */
         httpWithFilter
                 .csrf().disable()
-                .authorizeRequests().anyRequest().authenticated();
+                .authorizeHttpRequests().anyRequest().authenticated();
     }
 
 }

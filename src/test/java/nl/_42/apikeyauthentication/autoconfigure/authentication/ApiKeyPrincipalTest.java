@@ -8,6 +8,6 @@ class ApiKeyPrincipalTest {
 
     @Test
     void getApiKey() {
-        assertEquals("test", new ApiKeyPrincipal("test").getApiKey());
+        assertEquals("test", new ApiKeyPrincipal("test").apiKey());
     }
 }
