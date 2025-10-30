@@ -9,6 +9,9 @@ import jakarta.servlet.Filter;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -31,6 +34,9 @@ public class ApiKeyAuthenticationConfigurationBuilder implements ApiKeyAuthentic
     private final RequestMatcher requestMatcher = DEFAULT_REQUEST_MATCHER;
 
     private final Collection<String> authorizedApiKeys;
+
+    @Builder.Default
+    private final AuthenticationEntryPoint authenticationFailureEntryPoint = new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED);
 
     @Builder.Default
     private final Class<? extends Filter> addFilterBeforeClass = BasicAuthenticationFilter.class;
@@ -92,5 +98,19 @@ public class ApiKeyAuthenticationConfigurationBuilder implements ApiKeyAuthentic
     @Override
     public Class<? extends Filter> getAddFilterAfterClass() {
         return addFilterAfterClass;
+    }
+
+    /**
+     * Specify the {@link AuthenticationEntryPoint} which handles failed authentications.
+     * By default, we return HTTP 401 'Unauthorized' via {@link HttpStatusEntryPoint}.
+     * This best matches the situation for incorrect API Keys, which are unauthorized to use the application.
+     * You can override this method to specify your own {@link AuthenticationEntryPoint}, such as for another
+     * HTTP status code or for custom error handling.
+     * You can also explicitly set this to 'null' to use the default authentication failure handler of Spring.
+     * @return Returns the {@link AuthenticationEntryPoint} to use for failed authentications.
+     */
+    @Override
+    public AuthenticationEntryPoint getAuthenticationFailureEntryPoint() {
+        return authenticationFailureEntryPoint;
     }
 }

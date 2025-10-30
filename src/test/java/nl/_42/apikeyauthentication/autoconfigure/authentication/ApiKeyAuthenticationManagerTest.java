@@ -39,6 +39,18 @@ public class ApiKeyAuthenticationManagerTest {
         }
 
         @Test
+        @DisplayName("should throw BadCredentialsException if the key is null / empty")
+        void shouldThrowForNullOrEmptyKey() {
+            ApiKeyAuthenticationManager authenticationManager = new ApiKeyAuthenticationManager(List.of("test2345"));
+
+            BadCredentialsException eNull = assertThrows(BadCredentialsException.class, () -> authenticationManager.authenticate(new PreAuthenticatedAuthenticationToken(new ApiKeyPrincipal(null), "N/A")));
+            BadCredentialsException eEmpty = assertThrows(BadCredentialsException.class, () -> authenticationManager.authenticate(new PreAuthenticatedAuthenticationToken(new ApiKeyPrincipal(""), "N/A")));
+
+            assertEquals("The API key was not found or not the expected value.", eNull.getMessage());
+            assertEquals("The API key was not found or not the expected value.", eEmpty.getMessage());
+        }
+
+        @Test
         @DisplayName("should throw BadCredentialsException if the principal is not an instance of ApiKeyPrincipal")
         void shouldThrowForInvalidPrincipal() {
             ApiKeyAuthenticationManager authenticationManager = new ApiKeyAuthenticationManager(List.of("test2345"));

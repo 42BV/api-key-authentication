@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import jakarta.servlet.Filter;
 
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
@@ -40,4 +41,10 @@ public interface ApiKeyAuthenticationConfiguration {
      * @return Returns a class to insert the filter before in the filterChain.
      */
     Class<? extends Filter> getAddFilterAfterClass();
+
+    /**
+     * {@link AuthenticationEntryPoint} which handles failed authentications.
+     * @return Returns a {@link AuthenticationEntryPoint} which will be used for failed authentications.
+     */
+    AuthenticationEntryPoint getAuthenticationFailureEntryPoint();
 }

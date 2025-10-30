@@ -6,6 +6,7 @@ import nl._42.apikeyauthentication.autoconfigure.authentication.ApiKeyRequestFil
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 public class ApiKeyAuthenticationConfigurer {
 
@@ -45,7 +46,18 @@ public class ApiKeyAuthenticationConfigurer {
         }
 
         /*
-         * CSRF interferes with POST / PUT / DELETE requests securecd by the API Key. Therefore, it must be disabled.
+         * Sets the authenticationEntryPoint to handle requests where no, or an invalid API Key has been specified.
+         * If null, we do not change the default configuration of Spring.
+         */
+        AuthenticationEntryPoint authenticationFailureEntryPoint = configuration.getAuthenticationFailureEntryPoint();
+        if (authenticationFailureEntryPoint != null) {
+            httpWithFilter.exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer
+                    .authenticationEntryPoint(authenticationFailureEntryPoint)
+            );
+        }
+
+        /*
+         * CSRF interferes with POST / PUT / DELETE requests secured by the API Key. Therefore, it must be disabled.
          */
         httpWithFilter
                 .csrf().disable()

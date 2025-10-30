@@ -20,17 +20,21 @@ class ApiKeyRequestFilterTest {
     class getPreAuthenticatedPrincipal {
 
         @Test
-        @DisplayName("should return null for missing / empty header")
-        void shouldReturnNull_forMissingOrEmptyHeader() {
+        @DisplayName("should return api key principal without key for missing / empty header")
+        void shouldReturnPrincipalWithoutKey_forMissingOrEmptyHeader() {
             String headerName = "foobar";
 
             MockHttpServletRequest request = new MockHttpServletRequest();
 
-            assertNull(new ApiKeyRequestFilter(headerName).getPreAuthenticatedPrincipal(request));
+            Object principal = new ApiKeyRequestFilter(headerName).getPreAuthenticatedPrincipal(request);
+            assertInstanceOf(ApiKeyPrincipal.class, principal);
+            assertNull(((ApiKeyPrincipal)principal).apiKey());
 
             request.addHeader(headerName, "");
 
-            assertNull(new ApiKeyRequestFilter(headerName).getPreAuthenticatedPrincipal(request));
+            principal = new ApiKeyRequestFilter(headerName).getPreAuthenticatedPrincipal(request);
+            assertInstanceOf(ApiKeyPrincipal.class, principal);
+            assertEquals("", ((ApiKeyPrincipal)principal).apiKey());
 
             request = new MockHttpServletRequest();
             request.addHeader(headerName, "test");
@@ -47,7 +51,7 @@ class ApiKeyRequestFilterTest {
             request.addHeader(headerName, apiKey);
             Object principal = new ApiKeyRequestFilter(headerName).getPreAuthenticatedPrincipal(request);
 
-            assertTrue(principal instanceof ApiKeyPrincipal);
+            assertInstanceOf(ApiKeyPrincipal.class, principal);
 
             assertEquals(apiKey, ((ApiKeyPrincipal)principal).apiKey());
         }

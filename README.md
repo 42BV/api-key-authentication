@@ -100,6 +100,34 @@ public class ApiKeyConfig {
 }
  ```
 
+### Using a custom response code for failed authentications
+By default, your security settings will be configured to return HTTP 401 'Unauthorized' for requests that fail
+to authenticate using an API Key.
+
+You can customize this to return a different HTTP status code or error handler.
+ 
+ ```java
+@Configuration
+@EnableWebSecurity
+public class ApiKeyConfig {
+
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    ApiKeyAuthenticationConfiguration config = ApiKeyAuthenticationConfigurationBuilder.builder()
+            .authorizedApiKeys(Set.of(ALLOWED_KEY_1, ALLOWED_KEY_2))
+            // Option 1: custom authenticationFailureEntryPoint which sets Http 402 'Payment Required' as status.
+            .authenticationFailureEntryPoint(new HttpStatusEntryPoint(HttpStatus.PAYMENT_REQUIRED))
+            // Option 2: If you want to keep the default settings of Spring (HTTP 403 'Forbidden'), explicitly set this to null:
+            .authenticationFailureEntryPoint(null)
+            .build();
+
+    ApiKeyAuthenticationConfigurer.configure(config, http);
+    
+    return http.build();
+  }
+}
+ ```
+
 ### Advanced request matching
 By default, all endpoints will be secured. You can either use a String-based ANT Pattern or a `RequestMatcher` to customize which endpoints to protect.
  

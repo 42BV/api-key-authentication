@@ -56,4 +56,18 @@ public class ApiKeyScenarioTest {
 
     }
 
+    @ExtendWith(SpringExtension.class)
+    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+    @ActiveProfiles({ "unit-test", "custom-authentication-entry-point" })
+    public static class CustomAuthenticationEntryPointTest extends AbstractSpringTest {
+
+    }
+
+    @ExtendWith(SpringExtension.class)
+    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+    @ActiveProfiles({ "unit-test", "null-authentication-entry-point" })
+    public static class NullAuthenticationEntryPointTest extends AbstractSpringTest {
+
+    }
+
 }
