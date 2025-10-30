@@ -22,7 +22,7 @@ public class ApiKeyAuthenticationManager implements AuthenticationManager {
         }
 
         String key = ((ApiKeyPrincipal) authentication.getPrincipal()).apiKey();
-        if (!authorizedApiKeys.contains(key)) {
+        if (!authorizedApiKeys.contains(key != null ? key : "")) {
             throw new BadCredentialsException("The API key was not found or not the expected value.");
         }
 
