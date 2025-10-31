@@ -18,7 +18,7 @@ A library to easily configure API Key authentication in (parts of) your Spring B
 - Configurable filter placement in the FilterChain
 
 ## Requirements
-- Java 17 and Spring Boot 3.0.0+ (use version 1.0.0 of this library if still using Spring Boot 2.x)
+- Java 21 and Spring Boot 3.5.7+ (use version 2.0.0 of this library if still using Java 17, or use version 1.0.0 of this library if still using Spring Boot 2.x)
 - Spring Security
 - Spring Web
 
@@ -35,7 +35,7 @@ A library to easily configure API Key authentication in (parts of) your Spring B
     <dependency>
         <groupId>nl.42</groupId>
         <artifactId>api-key-authentication</artifactId>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
     </dependency>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -62,8 +62,8 @@ public class ApiKeyConfig {
     // ... or you can create your very own implementation of ApiKeyAuthenticationConfiguration
     ApiKeyAuthenticationConfiguration config = ApiKeyAuthenticationConfigurationBuilder.builder() 
             .authorizedApiKeys(Set.of(ALLOWED_KEY_1, ALLOWED_KEY_2)) // The API Keys that will be granted access to the endpoints
-            .antPattern("/public-api/**") // The endpoints you want to protect by API Key (basic pattern). Defaults to 'all endpoints'.
-            .requestMatcher(new OrRequestMatcher(new AntPathRequestMatcher("/public-api/v1/hello"), new AntPathRequestMatcher("/public-api/v1/goodbye"))) // The endpoints you want to protect by API Key (advanced matching)
+            .pathPattern("/public-api/**") // The endpoints you want to protect by API Key (basic pattern). Defaults to 'all endpoints'.
+            .requestMatcher(new OrRequestMatcher(PathPatternRequestMatcher.withDefaults().matcher("/public-api/v1/hello"), PathPatternRequestMatcher.withDefaults().matcher("/public-api/v1/goodbye"))) // The endpoints you want to protect by API Key (advanced matching)
             .addFilterBeforeClass(BasicAuthenticationFilter.class) // Customize where the API Key check will be inserted (defaults to before BasicAuthenticationFilter)
             .addFilterAfterClass(FooFilter.class) // Customize where the API Key check will be inserted  (defaults to null)
             .headerName("my-awesome-api-key") // Customize the header name (defaults to x-api-key)
@@ -129,7 +129,7 @@ public class ApiKeyConfig {
  ```
 
 ### Advanced request matching
-By default, all endpoints will be secured. You can either use a String-based ANT Pattern or a `RequestMatcher` to customize which endpoints to protect.
+By default, all endpoints will be secured. You can either use a String-based [PathPattern](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/util/pattern/PathPattern.html) or a `RequestMatcher` to customize which endpoints to protect.
  
  ```java
 @Configuration
@@ -140,7 +140,7 @@ public class ApiKeyConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     ApiKeyAuthenticationConfiguration config = ApiKeyAuthenticationConfigurationBuilder.builder()
             .authorizedApiKeys(Set.of(ALLOWED_KEY_1, ALLOWED_KEY_2))
-            .requestMatcher(new OrRequestMatcher(new AntPathRequestMatcher("/public-api/v1/**"), new AntPathRequestMatcher("/public-api/v2/**")))
+            .requestMatcher(new OrRequestMatcher(PathPatternRequestMatcher.withDefaults().matcher("/public-api/v1/**"), PathPatternRequestMatcher.withDefaults().matcher("/public-api/v2/**")))
             .build();
 
     ApiKeyAuthenticationConfigurer.configure(config, http);
