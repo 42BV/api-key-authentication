@@ -23,8 +23,8 @@ public class ApiKeyScenarioTest {
 
     @ExtendWith(SpringExtension.class)
     @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-    @ActiveProfiles({ "unit-test", "api-key-ant-pattern" })
-    public static class ApiKeyAntPatternTest extends AbstractSpringTest {
+    @ActiveProfiles({ "unit-test", "api-key-path-pattern" })
+    public static class ApiKeyPathPatternTest extends AbstractSpringTest {
 
     }
 

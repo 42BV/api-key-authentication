@@ -4,7 +4,7 @@
 
     <groupId>nl.42</groupId>
     <artifactId>api-key-authentication</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>42 API Key Authentication</name>
     <description>Helper to configure API Key authentication in Spring applications</description>
@@ -52,26 +52,23 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
 
         <!-- main scope versions -->
-        <spring-boot.version>3.0.2</spring-boot.version>
-        <lombok.version>1.18.24</lombok.version>
+        <spring-boot.version>3.5.7</spring-boot.version>
+        <lombok.version>1.18.42</lombok.version>
 
         <!-- test scope versions -->
-        <httpclient5.version>5.2.1</httpclient5.version>
-        <json-path.version>2.7.0</json-path.version>
+        <httpclient5.version>5.5.1</httpclient5.version>
+        <json-path.version>2.9.0</json-path.version>
 
         <!-- plugin versions -->
-        <dependency-check-maven-plugin.version>8.0.2</dependency-check-maven-plugin.version>
-        <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
-        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-        <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-        <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
-        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <dependency-check-maven-plugin.version>12.1.8</dependency-check-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+        <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
     </properties>
 
     <dependencies>
@@ -149,16 +146,6 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven-compiler-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${maven-surefire-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
                     <version>${maven-release-plugin.version}</version>
                     <configuration>
@@ -195,7 +182,7 @@
                 <artifactId>dependency-check-maven</artifactId>
                 <version>${dependency-check-maven-plugin.version}</version>
                 <configuration>
-                    <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+                    <failBuildOnCVSS>0</failBuildOnCVSS>
                     <skipProvidedScope>true</skipProvidedScope>
                     <skipTestScope>true</skipTestScope>
                     <skipRuntimeScope>true</skipRuntimeScope>

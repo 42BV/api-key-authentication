@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 
 @Configuration
@@ -26,8 +26,8 @@ public class ApiKeyOnCustomRequestMatcherConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         ApiKeyAuthenticationConfiguration config = ApiKeyAuthenticationConfigurationBuilder.builder()
-                .antPattern("/private-api/**") // Will be ignored, the requestMatcher takes precedence over a String antPattern.
-                .requestMatcher(new OrRequestMatcher(new AntPathRequestMatcher("/public-api/v1/hello"), new AntPathRequestMatcher("/public-api/v1/goodbye")))
+                .pathPattern("/private-api/**") // Will be ignored, the requestMatcher takes precedence over a String pathPattern.
+                .requestMatcher(new OrRequestMatcher(PathPatternRequestMatcher.withDefaults().matcher("/public-api/v1/hello"), PathPatternRequestMatcher.withDefaults().matcher("/public-api/v1/goodbye")))
                 .authorizedApiKeys(Set.of(ALLOWED_KEY_1, ALLOWED_KEY_2))
                 .build();
 

@@ -7,10 +7,17 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
+/**
+ * Spring Security {@link AuthenticationManager} which verifies the supplied API Key against a list of granted API Keys.
+ */
 public class ApiKeyAuthenticationManager implements AuthenticationManager {
 
     private final Collection<String> authorizedApiKeys;
 
+    /**
+     * Construct an instance of the authentication manager with the granted API Keys.
+     * @param authorizedApiKeys Granted API keys.
+     */
     public ApiKeyAuthenticationManager(Collection<String> authorizedApiKeys) {
         this.authorizedApiKeys = authorizedApiKeys;
     }
