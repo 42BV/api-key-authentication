@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-- Breaking changes:
+- Breaking changes: 
+  - This version requires Java 21 and Spring Boot 3.5.7+
   - The filter now returns HTTP 401 'Unauthorized' instead of HTTP 403 'Forbidden' when no API Key or an invalid API Key is provided.
+  - The filter is now applied using [Path Patterns](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/util/pattern/PathPattern.html) instead of Ant Patterns, which are deprecated by Spring.
+- Updated dependencies and GitHub actions workflow
+- Migrated release workflow to Sonatype Central Publishing
 
 ## [2.0.0] - 2023-01-31
 - Breaking changes: This version requires Java 17 and Spring Boot 3.0.2+
