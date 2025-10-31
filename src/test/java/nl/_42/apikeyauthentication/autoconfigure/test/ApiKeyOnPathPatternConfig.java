@@ -14,9 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@Profile("api-key-ant-pattern")
+@Profile("api-key-path-pattern")
 @EnableWebSecurity
-public class ApiKeyOnAntPatternConfig {
+public class ApiKeyOnPathPatternConfig {
 
     public static final String ALLOWED_KEY_1 = "public-1234567890";
     public static final String ALLOWED_KEY_2 = "public-abcdefghij";
@@ -24,7 +24,7 @@ public class ApiKeyOnAntPatternConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         ApiKeyAuthenticationConfiguration config = ApiKeyAuthenticationConfigurationBuilder.builder()
-                .antPattern("/public-api/**")
+                .pathPattern("/public-api/**")
                 .authorizedApiKeys(Set.of(ALLOWED_KEY_1, ALLOWED_KEY_2))
                 .build();
 

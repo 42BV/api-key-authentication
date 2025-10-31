@@ -13,22 +13,32 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+/**
+ * Builder to configure an instance of ApiKeyAuthenticationConfiguration.
+ */
 @Builder
 @Slf4j
 public class ApiKeyAuthenticationConfigurationBuilder implements ApiKeyAuthenticationConfiguration {
 
+    /**
+     * The default HTTP header name to use: x-api-key
+     */
     public static final String DEFAULT_HEADER_NAME = "x-api-key";
-    public static final String DEFAULT_REQUEST_PATTERN = "**";
-    private static final RequestMatcher DEFAULT_REQUEST_MATCHER = new AntPathRequestMatcher(DEFAULT_REQUEST_PATTERN);
+
+    /**
+     * The default request pattern (Spring PathPattern) to apply Api Key security on.
+     */
+    public static final String DEFAULT_REQUEST_PATTERN = "/**";
+    private static final RequestMatcher DEFAULT_REQUEST_MATCHER = PathPatternRequestMatcher.withDefaults().matcher(DEFAULT_REQUEST_PATTERN);
 
     @Builder.Default
     private final String headerName = DEFAULT_HEADER_NAME;
 
     @Builder.Default
-    private final String antPattern = DEFAULT_REQUEST_PATTERN;
+    private final String pathPattern = DEFAULT_REQUEST_PATTERN;
 
     @Builder.Default
     private final RequestMatcher requestMatcher = DEFAULT_REQUEST_MATCHER;
@@ -61,14 +71,14 @@ public class ApiKeyAuthenticationConfigurationBuilder implements ApiKeyAuthentic
     @Override
     public RequestMatcher getRequestMatcher() {
         if (!Objects.equals(requestMatcher, DEFAULT_REQUEST_MATCHER)) {
-            //noinspection ConstantConditions IDE cannot detect that Lombok Builder ignores final field 'antPattern'. This log statement can actually be reached.
-            if (!Objects.equals(antPattern, DEFAULT_REQUEST_PATTERN)) {
-                log.warn("Ignoring custom provided antPattern, since a requestMatcher has already been supplied. If you want ot use a String-based antPattern, remove the custom requestMatcher.");
+            //noinspection ConstantConditions IDE cannot detect that Lombok Builder ignores final field 'pathPattern'. This log statement can actually be reached.
+            if (!Objects.equals(pathPattern, DEFAULT_REQUEST_PATTERN)) {
+                log.warn("Ignoring custom provided pathPattern, since a requestMatcher has already been supplied. If you want ot use a String-based pathPattern, remove the custom requestMatcher.");
             }
             return requestMatcher;
         }
 
-        return new AntPathRequestMatcher(antPattern);
+        return PathPatternRequestMatcher.withDefaults().matcher(pathPattern);
     }
 
     /**

@@ -10,7 +10,7 @@ import java.util.Objects;
 
 import nl._42.apikeyauthentication.autoconfigure.test.ApiKeyCustomHeaderNameConfig;
 import nl._42.apikeyauthentication.autoconfigure.test.ApiKeyOnAllEndpointsConfig;
-import nl._42.apikeyauthentication.autoconfigure.test.ApiKeyOnAntPatternConfig;
+import nl._42.apikeyauthentication.autoconfigure.test.ApiKeyOnPathPatternConfig;
 import nl._42.apikeyauthentication.autoconfigure.test.ApiKeyOnCustomRequestMatcherConfig;
 import nl._42.apikeyauthentication.autoconfigure.test.CustomAuthenticationEntryPointConfig;
 import nl._42.apikeyauthentication.autoconfigure.test.FilterPositioningAfterConfig;
@@ -29,13 +29,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-public class ApiKeyAuthenticationConfigurerTest {
+class ApiKeyAuthenticationConfigurerTest {
 
     @Nested
     class allDefaultConfig extends ApiKeyScenarioTest.ApiKeyOnAllEndpointsTest {
 
         @Test
-        @DisplayName("should enable API Key authentication on ALL application endpoints if no ant pattern or requestMatcher is configured")
+        @DisplayName("should enable API Key authentication on ALL application endpoints if no path pattern or requestMatcher is configured")
         void shouldEnableOnAllEndpoints() {
             RestTemplate allowedRestTemplate1 = buildRestTemplate(ApiKeyOnAllEndpointsConfig.ALLOWED_KEY_1);
             RestTemplate allowedRestTemplate2 = buildRestTemplate(ApiKeyOnAllEndpointsConfig.ALLOWED_KEY_2);
@@ -101,13 +101,13 @@ public class ApiKeyAuthenticationConfigurerTest {
     }
 
     @Nested
-    class antPatternConfig extends ApiKeyScenarioTest.ApiKeyAntPatternTest {
+    class pathPatternConfig extends ApiKeyScenarioTest.ApiKeyPathPatternTest {
 
         @Test
-        @DisplayName("should enable API Key authentication only on endpoints matching the given string antPattern")
-        public void shouldConfigureSecurity_withAntPattern() {
-            RestTemplate allowedRestTemplate1 = buildRestTemplate(ApiKeyOnAntPatternConfig.ALLOWED_KEY_1);
-            RestTemplate allowedRestTemplate2 = buildRestTemplate(ApiKeyOnAntPatternConfig.ALLOWED_KEY_2);
+        @DisplayName("should enable API Key authentication only on endpoints matching the given string pathPattern")
+        public void shouldConfigureSecurity_withPathPattern() {
+            RestTemplate allowedRestTemplate1 = buildRestTemplate(ApiKeyOnPathPatternConfig.ALLOWED_KEY_1);
+            RestTemplate allowedRestTemplate2 = buildRestTemplate(ApiKeyOnPathPatternConfig.ALLOWED_KEY_2);
             RestTemplate unauthorizedTemplate = buildRestTemplate("foo");
 
             // Both configured keys should be allowed
@@ -116,7 +116,7 @@ public class ApiKeyAuthenticationConfigurerTest {
             HttpEntity<Map<String, Object>> publicApiResult3 = allowedRestTemplate2.exchange(baseUrl + "/public-api/v1/goodbye", HttpMethod.GET, null, ParameterizedTypeReference.forType(Map.class));
             HttpEntity<Map<String, Object>> publicApiResult4 = allowedRestTemplate2.exchange(baseUrl + "/public-api/v1/sleep-well", HttpMethod.GET, null, ParameterizedTypeReference.forType(Map.class));
 
-            // Foo key should be unauthorized on endpoints matching the ant pattern (/public-api/**)
+            // Foo key should be unauthorized on endpoints matching the path pattern (/public-api/**)
             HttpClientErrorException errorExceptionUnauthorized = assertThrows(HttpClientErrorException.class, () -> unauthorizedTemplate.exchange(baseUrl + "/public-api/v1/hello", HttpMethod.GET, null, Map.class));
 
             // Foo key should NOT be unauthorized on other endpoints than /public-api, since no security config exists for those.
@@ -138,8 +138,8 @@ public class ApiKeyAuthenticationConfigurerTest {
     class customRequestMatcherConfig extends ApiKeyScenarioTest.ApiKeyCustomRequestMatcherTest {
 
         @Test
-        @DisplayName("should enable API Key authentication only on endpoints matching the given requestMatcher (has precedence over antPattern")
-        public void shouldConfigureSecurity_withAntPattern() {
+        @DisplayName("should enable API Key authentication only on endpoints matching the given requestMatcher (has precedence over pathPattern")
+        public void shouldConfigureSecurity_withPathPattern() {
             RestTemplate allowedRestTemplate1 = buildRestTemplate(ApiKeyOnCustomRequestMatcherConfig.ALLOWED_KEY_1);
             RestTemplate allowedRestTemplate2 = buildRestTemplate(ApiKeyOnCustomRequestMatcherConfig.ALLOWED_KEY_2);
             RestTemplate unauthorizedTemplate = buildRestTemplate("foo");
@@ -241,7 +241,7 @@ public class ApiKeyAuthenticationConfigurerTest {
 
         @Test
         @DisplayName("should use custom AuthenticationEntryPoint if specified")
-        public void shouldConfigureSecurity_withAntPattern()  {
+        public void shouldConfigureSecurity_withPathPattern()  {
             RestTemplate allowedRestTemplate = buildRestTemplate(CustomAuthenticationEntryPointConfig.ALLOWED_KEY);
             RestTemplate notAllowedTemplate = buildRestTemplate("foo");
 
@@ -263,7 +263,7 @@ public class ApiKeyAuthenticationConfigurerTest {
 
         @Test
         @DisplayName("should use Spring default AuthenticationEntryPoint if explicitly set to null")
-        public void shouldConfigureSecurity_withAntPattern()  {
+        public void shouldConfigureSecurity_withPathPattern()  {
             RestTemplate allowedRestTemplate = buildRestTemplate(NullAuthenticationEntryPointConfig.ALLOWED_KEY);
             RestTemplate notAllowedTemplate = buildRestTemplate("foo");
 
